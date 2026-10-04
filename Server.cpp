@@ -40,28 +40,54 @@ class Stack
     int32_t count;
 
 public:
-    // Implement these functions:
-    Stack()
-    { // initialize the stack
+    Stack() {
+        top = nullptr;
+        count = 0;
     }
+
+    ~Stack()
+    {
+        while (!isEmpty())
+            pop();
+    }
+
     void push(const T& val)
     {
+        if (count >= MAX_STACK_DEPTH) return;
 
-        // pushes the value on the stack if max limit is not reached yet.
+        Node node;
+        node.data = val;
+        node.next = top;
+        top = node;
+        count++;
     }
+
     T pop()
     {
-        // pop the top value on the stack
+        if (isEmpty()) return T();
+
+        Node* temp = top;
+        T val = temp->data;
+        top = top->next;
+        delete temp;
+        count--;
+        return val;
     }
+
     T& peek()
     {
-        // returns the top value on the stack
+        if (isEmpty()) return T();
+        return top->data;
     }
+
     bool isEmpty()
     {
+        return top == nullptr;
     }
+
     int32_t depth()
     {
+        return count;
     }
     int32_t snapshot_into(T out[], int32_t maxLen)
     {
