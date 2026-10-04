@@ -8,3 +8,6 @@ Implemented Stack class
 4 October 2026/Sunday/1:12 AM
 Wrote snapshot struct
 
+4 October 2026/Sunday/1:38 AM
+Session cLosed
+
