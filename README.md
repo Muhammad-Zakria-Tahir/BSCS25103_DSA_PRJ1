@@ -12,11 +12,14 @@ Wrote snapshot struct
 Session cLosed
 
 
-4 October 2026/Sunday/7:44 AM
+4 October 2026/Sunday/7:44 PM
 Session Started 
 
-4 October 2026/Sunday/8:19 AM
+4 October 2026/Sunday/8:19 PM
 Updated Timeline class
 
-4 October 2026/Sunday/8:46 AM
+4 October 2026/Sunday/8:46 PM
 Updated Snapchat into function
+
+4 October 2026/Sunday/9:05 PM
+Session closed
