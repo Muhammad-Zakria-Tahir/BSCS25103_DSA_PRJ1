@@ -98,7 +98,10 @@ public:
 
 
 // Timeline : doubly linked list of Snapshots
-struct Snapshot; // fwd declaration;
+struct Snapshot{
+    Frame callStack[MAX_STACK_DEPTH];
+    int32_t stackDepth;
+}
 struct TimelineNode
 {
     Snapshot* data;
