@@ -91,8 +91,26 @@ public:
     }
     int32_t snapshot_into(T out[], int32_t maxLen)
     {
-        // copies every frame, top to bottom in the array given as a parameter
-        // this is what buildSnapshot() call, returns count written
+        int32_t totalSnaps;
+
+        if (count > maxLen) {
+            totalSnaps = maxLen;
+        }
+        else {
+            totalSnaps = count;
+        }
+
+        Node* current = top;
+        int32_t index = totalSnaps - 1;
+
+        while (current != nullptr && index >= 0)
+        {
+            out[index] = current->data;
+            current = current->next;
+            index--;
+        }
+
+        return totalSnaps;
     }
 };
 
@@ -114,20 +132,43 @@ class Timeline
     int32_t stepCount;
 
 public:
-    // Implement these functions
-    Timeline()
+Timeline()
+{
+    head = tail = nullptr;
+    stepCount = 0;
+}
+~Timeline()
+{
+    TimelineNode* current = head;
+    while (current != nullptr)
     {
+        TimelineNode* next = current->next;
+        delete current->data;
+        delete current;
+        current = next;
     }
-    void record(Snapshot* s)
-    {
-        // add record in the timeline
-    }
-    TimelineNode* begin()
-    {
-    }
-    int32_t getStepCount()
-    {
-    }
+}
+void record(Snapshot* s)
+{
+    TimelineNode node;
+    node.data = s;
+    node.next = nullptr;
+    node.prev = tail;
+    if (head == nullptr) 
+        head = &node;
+    if (tail != nullptr) 
+        tail->next = &node;
+    tail = &node;
+    stepCount++;
+}
+TimelineNode* begin()
+{
+    return head;
+}
+int32_t getStepCount()
+{
+    return stepCount;
+}
 };
 
 // Core structs
