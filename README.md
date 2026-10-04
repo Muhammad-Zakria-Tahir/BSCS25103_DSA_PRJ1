@@ -5,3 +5,6 @@ Start Working on the Project
 Imported Given Server.cpp
 Implemented Stack class 
 
+4 October 2026/Sunday/1:12 AM
+Wrote snapshot struct
+
