@@ -32,3 +32,6 @@ wrote writeheader function
 
 5 October 2026 /Monday /8:59 PM 
 wrote firstword and secondword function
+
+5 October 2026 /Monday /10:11 PM
+Session closed
