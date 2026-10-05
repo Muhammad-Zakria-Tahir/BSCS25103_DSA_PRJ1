@@ -227,11 +227,19 @@ bool readSourceLine(ifstream& in, string& out)
 }
 string firstWord(const string& line)
 {
-    // returns first word from the input string
+    istringstream input(line);
+    string word;
+    input >> word;
+    return word;
 }
+
 string secondWord(const string& line)
 {
-    // returns the second word
+    istringstream input(line);
+    string temp;
+    string word;
+    input >> temp >> word;
+    return word;
 }
 bool validateProgram(const char* sourcePath)
 {
