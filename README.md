@@ -26,3 +26,6 @@ Session closed
 
 5 October 2026 /Monday /7:44 PM 
 Session started
+
+5 October 2026 /Monday /8:24 PM 
+wrote writeheader function
