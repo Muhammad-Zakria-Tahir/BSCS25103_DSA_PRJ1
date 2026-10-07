@@ -41,3 +41,6 @@ Session started
 
 7 October 2026/Wednesday / 1:38 PM
 wrote readSourceLine Function
+
+7 October 2026/Wednesday / 2:19 PM
+wrote validateProgram Function
