@@ -38,3 +38,6 @@ Session closed
 
 7 October 2026/Wednesday / 1:10 PM
 Session started
+
+7 October 2026/Wednesday / 1:38 PM
+wrote readSourceLine Function
