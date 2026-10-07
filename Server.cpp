@@ -328,20 +328,77 @@ int64_t readResolveRecord(FILE* f, string& outText)
 
     return offsetfield;
 }
+
 int64_t resolveProgram(const char* sourcePath, const char* resolveBinPath)
 {
     FuncEntry funcArray[MAX_FUNCS];
     int32_t funcCount = 0;
     PendingPatch patches[MAX_PATCHES];
     int32_t patchCount = 0;
-    // Every source line becomes one record holding the raw line, as-is.
-    // resolve() only PEEKS at the leading word(s) -- enough to spot FUNC
-    // (remember its position) and CALL (remember which function it needs
-    // and where its offset field sits).
-    // Once the whole file is written, every CALL's offset field is patched
-    // with its target's position. Patching happens after the full write
-    // Returns the byte offset of main's FUNC header record.
-    // if there is no main return the error 
+
+    ifstream in(sourcePath);
+    FILE* fout = fopen(resolveBinPath, "wb+");
+    if (!in.is_open() || !fout) return -1;
+
+    string line;
+    int64_t mainofs = -1;
+
+    while (readSourceLine(in, line))
+    {
+        string first = firstWord(line);
+        int64_t Start = ftell(fout);
+
+        if (first == "func")
+        {
+            string second = secondWord(line);
+            funcArray[funcCount++] = { second, Start };
+            if (second == "main")  mainofs = Start;
+
+            writeResolveRecord(fout, 0, line);
+        }
+        else if (first == "call")
+        {
+            string FuncName = secondWord(line);
+            patches[patchCount++] = { Start, FuncName };
+            writeResolveRecord(fout, 0, line);
+        }
+        else
+        {
+            writeResolveRecord(fout, 0, line);
+        }
+    }
+
+    if (mainofs == -1)
+    {
+        fclose(fout);
+        return -1;
+    }
+
+    for (int i = 0; i < patchCount; i++)
+    {
+        int64_t targetofs = -1;
+        for (int j = 0; j < funcCount; j++)
+        {
+            if (funcArray[j].funcName == patches[i].targetFuncName)
+            {
+                targetofs = funcArray[j].byteOffsetInResolveBin;
+                break;
+            }
+        }
+
+        if (targetofs == -1)
+        {
+            fclose(fout);
+            return -1;
+        }
+
+        fseek(fout, patches[i].byteOffsetOfOffsetField, SEEK_SET);
+        fwrite(&targetofs, sizeof(int64_t), 1, fout);
+    }
+
+    in.close();
+    fclose(fout);
+    return mainofs;
 }
 
 // PASS 0x2: EXECUTION (tokenization happens here)
