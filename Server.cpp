@@ -264,9 +264,41 @@ string secondWord(const string& line)
     input >> temp >> word;
     return word;
 }
+
 bool validateProgram(const char* sourcePath)
 {
-    // for each func defined there should be exactly one func_end and no nested funcs allowed - 
+    ifstream file(sourcePath);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    string line;
+    bool inFunction = false;
+
+    while (readSourceLine(file, line)) {
+        string first = firstWord(line);
+
+        if (first == "func") {
+
+            if (inFunction) {
+                file.close();
+                return false;
+            }
+            inFunction = true;
+        }
+        else if (first == "func_end") {
+
+            if (!inFunction) {
+                file.close();
+                return false;
+            }
+            inFunction = false;
+        }
+    }
+
+    file.close();
+
+    return !inFunction;
 }
 
 // PASS 0x1: RESOLVE() -> resolve.bin
