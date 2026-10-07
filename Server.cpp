@@ -358,10 +358,26 @@ struct Token
 };
 int32_t tokenizeLine(const string& line, Token tokens[], int32_t maxTokens)
 {
-    // first word is always a instruction keyword
-    // instruction set = [func, func_end, call, set, add, sub, mul and div]
-    // next word is identifier like name of a function, variable name
-    // after identifier all are the params/arg, space separated
+    istringstream input(line);
+    string word;
+    int32_t count = 0;
+
+    if (input >> word && count < maxTokens)
+    {
+        if (!iskeyword(word)) {
+            throw runtime_error("Keyword not Supported\n");
+        }
+        tokens[count++] = { KEYWORD, word };
+    }
+    if (input >> word && count < maxTokens)
+    {
+        tokens[count++] = { IDENTIFIER, word };
+    }
+    while (input >> word && count < maxTokens)
+    {
+        tokens[count++] = { PARAM, word };
+    }
+    return count;
 }
 Snapshot* buildSnapshot(Stack<Frame>& callStack)
 {
