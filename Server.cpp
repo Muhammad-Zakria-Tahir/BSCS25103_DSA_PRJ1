@@ -223,7 +223,30 @@ struct PendingPatch
 // PASS 0x0: READING source.bin + VALIDITY CHECK
 bool readSourceLine(ifstream& in, string& out)
 {
-    // reads the next nonblank line
+    string temp;
+
+    while (getline(in, temp)) {
+        int start = 0;
+        int end = temp.length() - 1;
+
+        while (start <= end && (temp[start] == ' ' || temp[start] == '\t' || temp[start] == '\n')) {
+            start++;
+        }
+
+        while (end >= start && (temp[end] == ' ' || temp[end] == '\t' || temp[end] == '\n')) {
+            end--;
+        }
+
+        if (start <= end) {
+            out = "";
+            for (int i = start; i <= end; ++i) {
+                out += temp[i];
+            }
+            return true;
+        }
+    }
+
+    return false;
 }
 string firstWord(const string& line)
 {
