@@ -356,6 +356,10 @@ struct Token
     TokenType type;
     string text;
 };
+
+bool iskeyword(string word) {
+    return (word == "func" || word == "func_end" || word == "call" || word == "set");
+}
 int32_t tokenizeLine(const string& line, Token tokens[], int32_t maxTokens)
 {
     istringstream input(line);
@@ -381,7 +385,10 @@ int32_t tokenizeLine(const string& line, Token tokens[], int32_t maxTokens)
 }
 Snapshot* buildSnapshot(Stack<Frame>& callStack)
 {
-    // build the snapshot based on the callStack given
+    Snapshot* snap = new Snapshot();
+    snap->stackDepth = callStack.depth();
+    callStack.snapshot_into(snap->callStack, MAX_STACK_DEPTH);
+    return snap;
 }
 void executeProgram(const char* resolveBinPath, int64_t mainOffset, Timeline& timeline)
 {
