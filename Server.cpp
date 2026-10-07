@@ -447,6 +447,40 @@ Snapshot* buildSnapshot(Stack<Frame>& callStack)
     callStack.snapshot_into(snap->callStack, MAX_STACK_DEPTH);
     return snap;
 }
+
+int32_t getValue(Frame& frame, const string& Name)
+{
+    for (int i = 0; i < frame.argc; i++)
+        if (frame.argv[i].name == Name)
+            return frame.argv[i].value;
+
+    for (int i = 0; i < frame.localCount; i++)
+        if (frame.locals[i].name == Name)
+            return frame.locals[i].value;
+
+    return 0;
+}
+
+void setValue(Frame& frame, const string& Name, int32_t val)
+{
+    for (int i = 0; i < frame.argc; i++)
+        if (frame.argv[i].name == Name)
+        {
+            frame.argv[i].value = val;
+            return;
+        }
+
+    for (int i = 0; i < frame.localCount; i++)
+        if (frame.locals[i].name == Name)
+        {
+            frame.locals[i].value = val;
+            return;
+        }
+
+    if (frame.localCount < MAX_VARS_PER_FRAME)
+        frame.locals[frame.localCount++] = { Name, val };
+
+}
 void executeProgram(const char* resolveBinPath, int64_t mainOffset, Timeline& timeline)
 {
     // initialize the call stack
