@@ -78,3 +78,6 @@ Fixed Stack
 
 10 October 2026/Wednesday / 12:44 PM
 Fixed Record Function in Timeline Class
+
+10 October 2026/Wednesday / 1:17 PM
+wrote execute program function
