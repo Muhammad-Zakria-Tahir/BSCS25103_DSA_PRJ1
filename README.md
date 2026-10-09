@@ -73,14 +73,14 @@ session closed
 9 October 2026/Wednesday / 11:53 PM
 session started
 
-10 October 2026/Wednesday / 12:31 PM
+10 October 2026/Wednesday / 12:31 AM
 Fixed Stack 
 
-10 October 2026/Wednesday / 12:44 PM
+10 October 2026/Wednesday / 12:44 AM
 Fixed Record Function in Timeline Class
 
-10 October 2026/Wednesday / 1:17 PM
+10 October 2026/Wednesday / 1:17 AM
 wrote execute program function
 
-10 October 2026/Wednesday / 1:24 PM
+10 October 2026/Wednesday / 1:24 AM
 updated is Keyword function
