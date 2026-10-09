@@ -75,3 +75,6 @@ session started
 
 10 October 2026/Wednesday / 12:31 PM
 Fixed Stack 
+
+10 October 2026/Wednesday / 12:44 PM
+Fixed Record Function in Timeline Class
