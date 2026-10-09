@@ -55,16 +55,16 @@ public:
     {
         if (count >= MAX_STACK_DEPTH) return;
 
-        Node node;
-        node.data = val;
-        node.next = top;
+        Node* node = new Node();
+        node->data = val;
+        node->next = top;
         top = node;
         count++;
     }
 
     T pop()
     {
-        if (isEmpty()) return T();
+        if (isEmpty()) throw underflow_error("Stack is empty.");
 
         Node* temp = top;
         T val = temp->data;
@@ -76,7 +76,7 @@ public:
 
     T& peek()
     {
-        if (isEmpty()) return T();
+        if (isEmpty()) throw underflow_error("Stack is empty.");
         return top->data;
     }
 
