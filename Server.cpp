@@ -415,7 +415,7 @@ struct Token
 };
 
 bool iskeyword(string word) {
-    return (word == "func" || word == "func_end" || word == "call" || word == "set");
+    return(word == "func" || word == "func_end" || word == "call" || word == "set" || word == "add" || word == "sub" || word == "mul" || word == "div");
 }
 int32_t tokenizeLine(const string& line, Token tokens[], int32_t maxTokens)
 {
