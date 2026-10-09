@@ -150,15 +150,15 @@ Timeline()
 }
 void record(Snapshot* s)
 {
-    TimelineNode node;
-    node.data = s;
-    node.next = nullptr;
-    node.prev = tail;
+    TimelineNode* node = new TimelineNode();
+    node->data = s;
+    node->next = nullptr;
+    node->prev = tail;
     if (head == nullptr) 
-        head = &node;
+        head = node;
     if (tail != nullptr) 
-        tail->next = &node;
-    tail = &node;
+        tail->next = node;
+    tail = node;
     stepCount++;
 }
 TimelineNode* begin()
