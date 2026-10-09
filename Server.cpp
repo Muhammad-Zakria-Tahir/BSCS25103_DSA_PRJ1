@@ -483,12 +483,102 @@ void setValue(Frame& frame, const string& Name, int32_t val)
 }
 void executeProgram(const char* resolveBinPath, int64_t mainOffset, Timeline& timeline)
 {
-    // initialize the call stack
-    // make the main frame
-    // push main frame on the call stack
+    FILE* f = fopen(resolveBinPath, "rb");
+    if (!f) return;
 
-    // implementation:
-    // execute line by line, and according to the keyword perform action
+    Stack<Frame> callStack;
+
+    Frame mainFrame;
+    mainFrame.func_name = "main";
+    mainFrame.argc = 0;
+    mainFrame.localCount = 0;
+    mainFrame.returnLine = -1;
+    callStack.push(mainFrame);
+
+    fseek(f, mainOffset, SEEK_SET);
+
+    Token tokens[MAX_TOKENS];
+    string lineText;
+
+    while (!callStack.isEmpty())
+    {
+        int64_t targetCallOffset = readResolveRecord(f, lineText);
+        if (lineText.empty()) break;
+        if (targetCallOffset == -1) break;
+
+        int32_t tokenCount = tokenizeLine(lineText, tokens, MAX_TOKENS);
+        if (tokenCount == 0) continue;
+
+        string word = tokens[0].text;
+
+        if (word == "func") continue;
+
+        Frame& current = callStack.peek();
+
+        if (word == "set")
+        {
+            string varName = tokens[1].text;
+            int32_t val = getValue(current, tokens[2].text);
+            setValue(current, varName, val);
+        }
+        else if (word == "add")
+        {
+            string dest = tokens[1].text;
+            int32_t val = getValue(current, dest) + getValue(current, tokens[2].text);
+            setValue(current, dest, val);
+        }
+        else if (word == "sub")
+        {
+            string dest = tokens[1].text;
+            int32_t val = getValue(current, dest) - getValue(current, tokens[2].text);
+            setValue(current, dest, val);
+        }
+        else if (word == "mul")
+        {
+            string dest = tokens[1].text;
+            int32_t val = getValue(current, dest) * getValue(current, tokens[2].text);
+            setValue(current, dest, val);
+        }
+        else if (word == "div")
+        {
+            string dest = tokens[1].text;
+            int32_t divisor = getValue(current, tokens[2].text);
+            int32_t val = (divisor != 0) ? (getValue(current, dest) / divisor) : 0;
+            setValue(current, dest, val);
+        }
+        else if (word == "call")
+        {
+            Frame call;
+            call.func_name = tokens[1].text;
+            call.argc = 0;
+            call.localCount = 0;
+
+            call.returnLine = ftell(f);
+
+            for (int i = 2; i < tokenCount; i++)
+            {
+                call.argv[call.argc++] = { tokens[i].text, getValue(current, tokens[i].text) };
+            }
+
+            callStack.push(call);
+            fseek(f, targetCallOffset, SEEK_SET);
+        }
+        else if (word == "func_end")
+        {
+            Frame completeFrame = callStack.pop();
+
+            if (!callStack.isEmpty())
+            {
+                fseek(f, completeFrame.returnLine, SEEK_SET);
+            }
+        }
+
+        if (!callStack.isEmpty()) {
+            timeline.record(buildSnapshot(callStack));
+        }
+    }
+
+    fclose(f);
 }
 
 // PASS 0x3: SERIALIZE TIMELINE
