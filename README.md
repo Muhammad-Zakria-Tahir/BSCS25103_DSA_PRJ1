@@ -69,3 +69,6 @@ wrote two functions getvalue and setvalue
 
 7 October 2026/Wednesday / 10:03 PM
 session closed 
+
+9 October 2026/Wednesday / 11:53 PM
+session started
