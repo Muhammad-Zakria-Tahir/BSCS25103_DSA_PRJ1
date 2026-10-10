@@ -90,3 +90,9 @@ Session closed
 
 10 October 2026/Wednesday / 2:34 PM
 Session started
+
+10 October 2026/Wednesday / 3:19 PM
+Wrote write Tdbg function
+
+10 October 2026/Wednesday / 2:34 PM
+Updated getValue Function
