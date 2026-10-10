@@ -450,6 +450,10 @@ Snapshot* buildSnapshot(Stack<Frame>& callStack)
 
 int32_t getValue(Frame& frame, const string& Name)
 {
+    
+    if (isNumber(Name))
+        return stoi(Name);
+    
     for (int i = 0; i < frame.argc; i++)
         if (frame.argv[i].name == Name)
             return frame.argv[i].value;
