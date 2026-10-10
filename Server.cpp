@@ -582,13 +582,41 @@ void executeProgram(const char* resolveBinPath, int64_t mainOffset, Timeline& ti
 }
 
 // PASS 0x3: SERIALIZE TIMELINE
+
 void writeTdbg(Timeline& timeline, const char* tdbgPath)
 {
-    // placeholder for header
-    // index array of the size of stepcount from the timeline
-    // placing each snapshot in the file while maintaining the index(starting point of each nth snapshot)
-    // after timeline add the index array i the file
-    // update the header
+    FILE* f = fopen(tdbgPath, "wb");
+    if (!f) return;
+
+    TTDBHeader header;
+    header.magic[0] = 'T';
+    header.magic[1] = 'T';
+    header.magic[2] = 'D';
+    header.magic[3] = 'B';
+    header.version = 1;
+    header.stepCount = timeline.getStepCount();
+    header.indexOffset = 0;
+
+    writeHeader(f, header);
+
+    int64_t* indexes = new int64_t[header.stepCount];
+    int32_t idx = 0;
+
+    TimelineNode* current = timeline.begin();
+    while (current != nullptr)
+    {
+        indexes[idx++] = ftell(f);
+        fwrite(current->data, sizeof(Snapshot), 1, f);
+        current = current->next;
+    }
+
+    header.indexOffset = ftell(f);
+    fwrite(indexes, sizeof(int64_t), header.stepCount, f);
+
+    fseek(f, 0, SEEK_SET);
+    writeHeader(f, header);
+
+    fclose(f);
 }
 // main section
 int32_t main()
@@ -596,7 +624,7 @@ int32_t main()
 
     if (!validateProgram("source.bin"))
     {
-        // send an error response instead of a .tdbg file
+        cout << "Error :Invalid Program\n";
         return 1;
     }
 
