@@ -7,11 +7,12 @@
 //   3. Pass 0X2   -- execute resolve.bin: tokenize ONE line at a time, update the call stack, take a snapshot -> Timeline
 //   4. Pass 0X3   -- serialize Timeline -> session.tdbg(header + snapshot records + dense index)
 
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
 #include <cstdint>
 #include <fstream>
+#include <iostream>
 #include <cstdio>
 using namespace std;
 
@@ -446,6 +447,16 @@ Snapshot* buildSnapshot(Stack<Frame>& callStack)
     snap->stackDepth = callStack.depth();
     callStack.snapshot_into(snap->callStack, MAX_STACK_DEPTH);
     return snap;
+}
+
+bool isNumber(const string word) {
+    bool isNum = true;
+    for (int i = 0; i < word.length(); i++) {
+        if (word[i] < '0' || word[i] > '9') {
+            isNum = false;
+        }
+    }
+    return isNum;
 }
 
 int32_t getValue(Frame& frame, const string& Name)
